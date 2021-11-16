@@ -1,6 +1,0 @@
-com/dellemc/pravega/Writer.java
- com.dellemc.pravega.Writer
-com/dellemc/pravega/Reader.java
- com.dellemc.pravega.Reader
-com/dellemc/pravega/WriterDup.java
- com.dellemc.pravega.WriterDup
