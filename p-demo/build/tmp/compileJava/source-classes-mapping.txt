@@ -1,8 +1,10 @@
+com/dellemc/pravega/Client.java
+ com.dellemc.pravega.Client
+com/dellemc/pravega/ReaderDup.java
+ com.dellemc.pravega.ReaderDup
+com/dellemc/pravega/WriterDup.java
+ com.dellemc.pravega.WriterDup
 com/dellemc/pravega/Writer.java
  com.dellemc.pravega.Writer
 com/dellemc/pravega/Reader.java
  com.dellemc.pravega.Reader
-com/dellemc/pravega/ReaderDuplicate.java
- com.dellemc.pravega.ReaderDuplicate
-com/dellemc/pravega/WriterDuplicate.java
- com.dellemc.pravega.WriterDuplicate

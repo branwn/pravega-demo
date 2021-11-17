@@ -42,5 +42,6 @@ public class Reader {
         createReaderGroup("tcp://127.0.0.1:9090", "dell", "demo", "dellemc");
         EventStreamReader<String> reader = createReader("tcp://127.0.0.1:9090", "dell", "demo", "dellemc");
         readData(reader);
+        reader.close();
     }
 }

@@ -43,5 +43,6 @@ public class Writer {
         EventStreamWriter<String> writer = getWriter("tcp://127.0.0.1:9090", "dell", "demo");
         writeData(writer,"EDG niubi");
         System.out.println("write data successfully");
+        writer.close();
     }
 }
