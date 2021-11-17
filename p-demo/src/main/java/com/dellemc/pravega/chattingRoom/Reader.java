@@ -9,7 +9,7 @@ import io.pravega.client.stream.impl.JavaSerializer;
 import java.net.URI;
 
 public class Reader {
-    public static void createReaderGroup(String url, String scope, String stream, String groupName) throws Exception {
+    public static ReaderGroupManager createReaderGroup(String url, String scope, String stream, String groupName) throws Exception {
         URI uri = new URI(url);
         ReaderGroupManager readerGroupManager = ReaderGroupManager.withScope(scope, uri);
 
@@ -21,6 +21,7 @@ public class Reader {
         ReaderGroupConfig build = ReaderGroupConfig.builder().stream(scope + "/" + stream).build();
         readerGroupManager.createReaderGroup(groupName, build);
 //        readerGroupManager.close();
+        return readerGroupManager;
     }
 
     public static EventStreamReader<String> createReader(String url, String scope, String readerId, String groupName) throws Exception {
