@@ -30,19 +30,11 @@ public class Reader {
         while (true) {
             EventRead<String> event = reader.readNextEvent(1000);
             if (event.getEvent() == null) {
-                System.out.println("No more event");
+                System.out.println("[Debug] No more event");
                 break;
             }
             System.out.println(event.getEvent());
         }
-
     }
 
-//    public static void main(String[] args) throws Exception {
-//
-//        createReaderGroup("tcp://127.0.0.1:9090", "dell", "demo", "dellemc");
-//        EventStreamReader<String> reader = createReader("tcp://127.0.0.1:9090", "dell", "demo", "dellemc");
-//        readData(reader);
-//        reader.close();
-//    }
 }

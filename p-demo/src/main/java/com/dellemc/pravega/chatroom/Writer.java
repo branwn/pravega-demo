@@ -18,7 +18,6 @@ public class Writer {
     public static void writeData(EventStreamWriter<String> writer, String message) throws Exception {
         CompletableFuture<Void> future = writer.writeEvent(message);
         future.get();
-        writer.close();
     }
 
     public static EventStreamWriter<String> getWriter(String url, String scope, String stream) throws Exception {
@@ -38,11 +37,5 @@ public class Writer {
         StreamConfiguration build = StreamConfiguration.builder().build();
         streamManager.createStream(scope,stream,build);
     }
-    public static void main(String[] args) throws Exception {
-        createStream("tcp://127.0.0.1:9090","dell","demo");
-        EventStreamWriter<String> writer = getWriter("tcp://127.0.0.1:9090", "dell", "demo");
-        writeData(writer,"EDG niubi");
-        System.out.println("write data successfully");
-        writer.close();
-    }
+
 }
