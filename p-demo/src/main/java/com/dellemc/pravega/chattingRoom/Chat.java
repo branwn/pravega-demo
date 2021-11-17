@@ -13,15 +13,15 @@ public class Chat {
     ReaderGroupManager readerGroupManager;
     String selfName, peerName;
 
-    public void sentMsg(String msg) throws Exception {
-        System.out.print("[Debug] Writing to " + this.peerName + "'s Inbox ...");
+    public void sendMsg(String msg) throws Exception {
+        System.out.println("[Debug] Writing to " + this.peerName + "'s Inbox ...");
         writeData(this.writer,"Hello from " + this.selfName);
         System.out.println("[Debug] Writing Finished");
     }
 
     public void recievedMsg() throws Exception {
         // read
-        System.out.print("[Debug] Reading " + this.selfName + "'s Inbox ...");
+        System.out.println("[Debug] Reading " + this.selfName + "'s Inbox ...");
         readData(reader);
         System.out.println("[Debug] Reading Finished");
     }
@@ -36,6 +36,7 @@ public class Chat {
     public Chat(String selfName, String peerName) throws Exception {
         this.selfName = selfName;
         this.peerName = peerName;
+        createStream("tcp://127.0.0.1:9090","chattingRoom",selfName + "Inbox");
         writer = getWriter("tcp://127.0.0.1:9090", "chattingRoom", peerName + "Inbox");
         readerGroupManager = createReaderGroup("tcp://127.0.0.1:9090", "chattingRoom", selfName + "Inbox", "self");
         reader = createReader("tcp://127.0.0.1:9090", "chattingRoom", "myId", "self");
