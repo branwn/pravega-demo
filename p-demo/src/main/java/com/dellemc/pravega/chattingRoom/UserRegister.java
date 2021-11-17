@@ -10,7 +10,6 @@ public class UserRegister {
     }
 
     public static void main(String[] args) throws Exception {
-//        System.out.println("Welcome to the Register!!!");
         for (int i = 0; i < args.length; i++) {
             chatRoomRegister(args[i]);
         }

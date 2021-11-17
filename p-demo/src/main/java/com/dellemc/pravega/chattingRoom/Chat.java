@@ -11,35 +11,34 @@ public class Chat {
     EventStreamWriter<String> writer;
     EventStreamReader<String> reader;
     ReaderGroupManager readerGroupManager;
-    String selfName, peerName;
+    String selfName, peerName, groupName;
 
     public void sendMsg(String msg) throws Exception {
-//        System.out.println("[Debug] Writing to " + this.peerName + "'s Inbox ...");
-        writeData(this.writer, msg);
-//        System.out.println("[Debug] Writing Finished");
+        writeData(this.writer, selfName + ": " + msg);
     }
 
     public void recieveMsg() throws Exception {
         // read
-//        System.out.println("[Debug] Reading " + this.selfName + "'s Inbox ...");
-        readData(reader);
-//        System.out.println("[Debug] Reading Finished");
+        readData(reader, "");
     }
 
     public void close() {
         // close
         writer.close();
         reader.close();
+        readerGroupManager.deleteReaderGroup(groupName);
         readerGroupManager.close();
     }
 
     public Chat(String selfName, String peerName) throws Exception {
+
         this.selfName = selfName;
         this.peerName = peerName;
+        this.groupName = selfName;
         createStream("tcp://127.0.0.1:9090","chattingRoom",selfName + "Inbox");
         writer = getWriter("tcp://127.0.0.1:9090", "chattingRoom", peerName + "Inbox");
-        readerGroupManager = createReaderGroup("tcp://127.0.0.1:9090", "chattingRoom", selfName + "Inbox", "self");
-        reader = createReader("tcp://127.0.0.1:9090", "chattingRoom", "myId", "self");
+        readerGroupManager = createReaderGroup("tcp://127.0.0.1:9090", "chattingRoom", selfName + "Inbox", selfName);
+        reader = createReader("tcp://127.0.0.1:9090", "chattingRoom", selfName + "ID", selfName);
     }
 
 

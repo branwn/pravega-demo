@@ -12,16 +12,12 @@ public class Reader {
     public static ReaderGroupManager createReaderGroup(String url, String scope, String stream, String groupName) throws Exception {
         URI uri = new URI(url);
         ReaderGroupManager readerGroupManager = ReaderGroupManager.withScope(scope, uri);
-
         // clear reader group //////////////
-        try {
-            readerGroupManager.deleteReaderGroup(groupName);
-        }catch (Exception e){
-
-        }
-
-
-
+//        try {
+//            readerGroupManager.deleteReaderGroup(groupName);
+//        }catch (Exception e){
+//
+//        }
         ReaderGroupConfig readerGroupConfig = ReaderGroupConfig.builder().stream(scope + "/" + stream).build();
         readerGroupManager.createReaderGroup(groupName, readerGroupConfig);
 //        readerGroupManager.close();
@@ -38,21 +34,15 @@ public class Reader {
     }
 
     public static void readData(EventStreamReader<String> reader) {
+        readData(reader);
+    }
+
+    public static void readData(EventStreamReader<String> reader, String prefix) {
         while (true) {
-            EventRead<String> event = reader.readNextEvent(1000);
-            if (event.getEvent() == null) {
-//                System.out.println("[Debug] No more event");
-                break;
-            }
-            System.out.println(event.getEvent());
+            EventRead<String> event = reader.readNextEvent(500);
+            if (event.getEvent() == null) { break; }
+            System.out.println(prefix + event.getEvent());
         }
     }
 
-//    public static void main(String[] args) throws Exception {
-//
-//        createReaderGroup("tcp://127.0.0.1:9090", "dell", "demo", "dellemc");
-//        EventStreamReader<String> reader = createReader("tcp://127.0.0.1:9090", "dell", "demo", "dellemc");
-//        readData(reader);
-//        reader.close();
-//    }
 }

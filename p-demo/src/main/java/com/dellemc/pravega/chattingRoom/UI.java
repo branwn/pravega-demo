@@ -1,6 +1,7 @@
 package com.dellemc.pravega.chattingRoom;
 import java.util.Scanner;
 
+import static com.dellemc.pravega.chattingRoom.UserRegister.chatRoomRegister;
 
 
 public class UI {
@@ -14,25 +15,26 @@ public class UI {
         System.out.println(HALFSPACE + "Welcome to the chat room!");
 
         Scanner s = new Scanner(System.in);  // Create a Scanner object
-        System.out.print("Please enter you name: ");
+        System.out.print("Please enter you  name: ");
         String selfName = s.nextLine();  // Read user input
         System.out.print("Please enter peer name: ");
         String peerName = s.nextLine();  // Read user input
 
+        // user register
+        chatRoomRegister(selfName);
+        chatRoomRegister(peerName);
+
         Chat myChat = new Chat(selfName, peerName);
         ReadMsgThread readMsg = new ReadMsgThread(myChat);
         readMsg.start();
-        System.out.print("You(" + selfName + "): ");
-        for (String input = ""; !(input.equals("exit")); input = s.nextLine()) {
-//            myChat.recieveMsg();
-            System.out.println("You(" + selfName + "): " + input);
+        for (String input = ""; !(input.equals("exit")); ) {
+            input = s.nextLine();
+            System.out.println(selfName + "(You): " + input);
             myChat.sendMsg(input);
         }
-
+        readMsg.interrupt();
         myChat.close();
     }
-
-
 
     public static void main(String[] args) {
         try {
@@ -40,15 +42,6 @@ public class UI {
         }catch (Exception e){
             System.out.printf("[Debug] Fail to open a chatting room");
         }
-
-
-//        Chat my_chat2 = new Chat("Bob", "Alice");
-//        my_chat2.sendMsg("Hello from Bob!");
-
-//        Chat my_chat = new Chat("Alice", "Bob");
-//        my_chat.recievedMsg();
-//        my_chat.close();
-
     }
 }
 
@@ -57,20 +50,27 @@ public class UI {
 class ReadMsgThread extends Thread {
     private Thread t;
     private Chat myChat;
+    private int sleepTime = 1000;
 
     ReadMsgThread(Chat myChat) {
         this.myChat = myChat;
     }
 
+    ReadMsgThread(Chat myChat, int sleepTime) {
+        this.myChat = myChat;
+        this.sleepTime = sleepTime;
+    }
+
     public void run() {
-//        System.out.println("Running " +  threadName );
         try {
-            for(int i = 100; i > 0; i--) {
+            while (! isInterrupted()){
                 myChat.recieveMsg();
-//                System.out.println("Thread: " + threadName + ", " + i);
-                Thread.sleep(1800);
+                Thread.sleep(this.sleepTime);
             }
-        }catch (InterruptedException e) {
+        } catch (InterruptedException e) {
+
+        } catch (IllegalStateException e){
+
         } catch (Exception e) {
             e.printStackTrace();
         }
