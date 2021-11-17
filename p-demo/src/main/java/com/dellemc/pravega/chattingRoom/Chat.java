@@ -13,7 +13,7 @@ public class Chat {
     ReaderGroupManager readerGroupManager;
     String selfName;
     int selfNameHash;
-    String inbox;
+    String inboxHashStr;
     int inboxHash;
 
     public void sendMsg(String msg) throws Exception {
@@ -37,11 +37,11 @@ public class Chat {
         this.selfName = selfName;
         this.selfNameHash = selfName.hashCode();
         this.inboxHash = inboxHash;
-        this.inbox = inboxHash + "";
+        this.inboxHashStr = inboxHash + "";
 
-        createStream("tcp://127.0.0.1:9090","chattingRoom",inbox);
-        writer = getWriter("tcp://127.0.0.1:9090", "chattingRoom", inbox);
-        readerGroupManager = createReaderGroup("tcp://127.0.0.1:9090", "chattingRoom", inbox, selfName);
+        createStream("tcp://127.0.0.1:9090","chattingRoom", inboxHashStr);
+        writer = getWriter("tcp://127.0.0.1:9090", "chattingRoom", inboxHashStr);
+        readerGroupManager = createReaderGroup("tcp://127.0.0.1:9090", "chattingRoom", inboxHashStr, selfName);
         reader = createReader("tcp://127.0.0.1:9090", "chattingRoom", selfNameHash + "", selfName);
     }
 

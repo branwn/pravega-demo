@@ -10,32 +10,48 @@ public class UI {
     static String HALFSPACE = "            ";
 
 
-    private static void mainLoop() throws Exception {
+    private static void intro() throws Exception {
+        String selfName = "";
+        int inboxHashCode = 0;
         System.out.println(LINE);
         System.out.println(HALFSPACE + "Welcome to the chat room!");
 
         Scanner s = new Scanner(System.in);  // Create a Scanner object
-        System.out.print("Please enter you  name: ");
-        String selfName = s.nextLine();  // Read user input
+        System.out.print("Please enter you name: ");
+        selfName = s.nextLine();  // Read user input
 
-        System.out.print("Please enter peer name: ");
-        String peerName = s.nextLine();  // Read user input
+        for (;;) {
+            System.out.println("1: one to one chatting.\n2: group chat.");
+            String choice = s.nextLine();
+            if (choice.equals("1")) {
+                System.out.print("Please enter peer name: ");
+                String input = s.nextLine();
+                inboxHashCode = selfName.hashCode() + input.hashCode();
+                break;
+            } else if (choice.equals("2")) {
+                System.out.print("Please enter the group name: ");
+                String input = s.nextLine();
+                inboxHashCode = input.hashCode();
+                break;
+            }
+        }
+        mainLoop(selfName, inboxHashCode);
+    }
 
-        int selfNameHash = selfName.hashCode();
-        int peerNameHash = peerName.hashCode();
-        int combineHash = selfNameHash + peerNameHash;
-
-
+    private static void mainLoop(String selfName, int inboxHashCode) throws Exception {
         // user register
-        chatRoomRegister(combineHash + "");
+        chatRoomRegister(inboxHashCode + "");
 //        chatRoomRegister(peerNameHash);
-        System.out.println("Room " + combineHash + " (Hash Code) has been successfully create.");
+        System.out.println("Room " + inboxHashCode + " (Hash Code) has been successfully created.");
         System.out.println(LINE);
-        Chat myChat = new Chat(selfName, combineHash);
+        Chat myChat = new Chat(selfName, inboxHashCode);
         ReadMsgThread readMsg = new ReadMsgThread(myChat);
         readMsg.start();
+        Scanner s = new Scanner(System.in);
         for (String input = ""; !(input.equals("exit")); input = s.nextLine()) {
-            myChat.sendMsg(input);
+            if (!input.equals("")) {
+                myChat.sendMsg(input);
+            }
         }
         readMsg.interrupt();
         myChat.close();
@@ -43,7 +59,7 @@ public class UI {
 
     public static void main(String[] args) {
         try {
-            mainLoop();
+            intro();
         }catch (Exception e){
             System.out.printf("[Debug] Fail to open a chatting room");
         }
