@@ -17,19 +17,23 @@ public class UI {
         Scanner s = new Scanner(System.in);  // Create a Scanner object
         System.out.print("Please enter you  name: ");
         String selfName = s.nextLine();  // Read user input
+
         System.out.print("Please enter peer name: ");
         String peerName = s.nextLine();  // Read user input
 
-        // user register
-        chatRoomRegister(selfName);
-        chatRoomRegister(peerName);
+        int selfNameHash = selfName.hashCode();
+        int peerNameHash = peerName.hashCode();
+        int combineHash = selfNameHash + peerNameHash;
 
-        Chat myChat = new Chat(selfName, peerName);
+
+        // user register
+        chatRoomRegister(combineHash + "");
+//        chatRoomRegister(peerNameHash);
+
+        Chat myChat = new Chat(selfName, combineHash);
         ReadMsgThread readMsg = new ReadMsgThread(myChat);
         readMsg.start();
-        for (String input = ""; !(input.equals("exit")); ) {
-            input = s.nextLine();
-            System.out.println(selfName + "(You): " + input);
+        for (String input = ""; !(input.equals("exit")); input = s.nextLine()) {
             myChat.sendMsg(input);
         }
         readMsg.interrupt();

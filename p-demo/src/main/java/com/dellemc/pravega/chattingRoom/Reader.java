@@ -34,7 +34,7 @@ public class Reader {
     }
 
     public static void readData(EventStreamReader<String> reader) {
-        readData(reader);
+        readData(reader, "");
     }
 
     public static void readData(EventStreamReader<String> reader, String prefix) {

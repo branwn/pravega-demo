@@ -32,8 +32,11 @@ public class Writer {
         StreamManager streamManager = StreamManager.create(uri);
         streamManager.createScope(scope);
 
-        StreamConfiguration build = StreamConfiguration.builder().build();
-        streamManager.createStream(scope, stream, build);
+        if (!streamManager.checkStreamExists(scope, stream)){
+            StreamConfiguration build = StreamConfiguration.builder().build();
+            streamManager.createStream(scope, stream, build);
+        }
+
     }
 
 }
