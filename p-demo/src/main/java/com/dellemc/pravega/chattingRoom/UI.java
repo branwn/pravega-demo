@@ -1,7 +1,7 @@
 package com.dellemc.pravega.chattingRoom;
-
-
 import java.util.Scanner;
+
+
 
 public class UI {
     static String LINE      = "=========================";
@@ -20,11 +20,16 @@ public class UI {
         String peerName = s.nextLine();  // Read user input
 
         Chat myChat = new Chat(selfName, peerName);
+        ReadMsgThread readMsg = new ReadMsgThread(myChat);
+        readMsg.start();
+        System.out.print("You(" + selfName + "): ");
         for (String input = ""; !(input.equals("exit")); input = s.nextLine()) {
+//            myChat.recieveMsg();
+            System.out.println("You(" + selfName + "): " + input);
             myChat.sendMsg(input);
-            myChat.recievedMsg();
-            System.out.print( selfName + ": ");
         }
+
+        myChat.close();
     }
 
 
@@ -44,5 +49,37 @@ public class UI {
 //        my_chat.recievedMsg();
 //        my_chat.close();
 
+    }
+}
+
+
+
+class ReadMsgThread extends Thread {
+    private Thread t;
+    private Chat myChat;
+
+    ReadMsgThread(Chat myChat) {
+        this.myChat = myChat;
+    }
+
+    public void run() {
+//        System.out.println("Running " +  threadName );
+        try {
+            for(int i = 100; i > 0; i--) {
+                myChat.recieveMsg();
+//                System.out.println("Thread: " + threadName + ", " + i);
+                Thread.sleep(1800);
+            }
+        }catch (InterruptedException e) {
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void start () {
+        if (t == null) {
+            t = new Thread (this);
+            t.start ();
+        }
     }
 }

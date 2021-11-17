@@ -7,23 +7,23 @@ import static com.dellemc.pravega.chattingRoom.Reader.*;
 import static com.dellemc.pravega.chattingRoom.Writer.*;
 
 public class Chat {
-    //        createStream("tcp://127.0.0.1:9090","chattingRoom",peerName + "Inbox");
+    // createStream("tcp://127.0.0.1:9090","chattingRoom",peerName + "Inbox");
     EventStreamWriter<String> writer;
     EventStreamReader<String> reader;
     ReaderGroupManager readerGroupManager;
     String selfName, peerName;
 
     public void sendMsg(String msg) throws Exception {
-        System.out.println("[Debug] Writing to " + this.peerName + "'s Inbox ...");
-        writeData(this.writer,"Hello from " + this.selfName);
-        System.out.println("[Debug] Writing Finished");
+//        System.out.println("[Debug] Writing to " + this.peerName + "'s Inbox ...");
+        writeData(this.writer, msg);
+//        System.out.println("[Debug] Writing Finished");
     }
 
-    public void recievedMsg() throws Exception {
+    public void recieveMsg() throws Exception {
         // read
-        System.out.println("[Debug] Reading " + this.selfName + "'s Inbox ...");
+//        System.out.println("[Debug] Reading " + this.selfName + "'s Inbox ...");
         readData(reader);
-        System.out.println("[Debug] Reading Finished");
+//        System.out.println("[Debug] Reading Finished");
     }
 
     public void close() {

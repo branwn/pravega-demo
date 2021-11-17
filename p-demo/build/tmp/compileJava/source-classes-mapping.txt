@@ -4,7 +4,11 @@ com/dellemc/pravega/chattingRoom/UserRegister.java
  com.dellemc.pravega.chattingRoom.UserRegister
 com/dellemc/pravega/chattingRoom/Reader.java
  com.dellemc.pravega.chattingRoom.Reader
+com/dellemc/pravega/chattingRoom/TestThread.java
+ com.dellemc.pravega.chattingRoom.TestThread
+ com.dellemc.pravega.chattingRoom.ThreadDemo
 com/dellemc/pravega/chattingRoom/Chat.java
  com.dellemc.pravega.chattingRoom.Chat
 com/dellemc/pravega/chattingRoom/UI.java
+ com.dellemc.pravega.chattingRoom.ReadMsgThread
  com.dellemc.pravega.chattingRoom.UI
