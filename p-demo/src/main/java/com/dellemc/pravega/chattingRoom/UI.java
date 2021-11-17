@@ -29,7 +29,8 @@ public class UI {
         // user register
         chatRoomRegister(combineHash + "");
 //        chatRoomRegister(peerNameHash);
-
+        System.out.println("Room " + combineHash + " (Hash Code) has been successfully create.");
+        System.out.println(LINE);
         Chat myChat = new Chat(selfName, combineHash);
         ReadMsgThread readMsg = new ReadMsgThread(myChat);
         readMsg.start();

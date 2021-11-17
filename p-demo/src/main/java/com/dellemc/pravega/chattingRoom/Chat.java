@@ -29,7 +29,7 @@ public class Chat {
         // close
         writer.close();
         reader.close();
-        readerGroupManager.deleteReaderGroup(inboxHash + "");
+        readerGroupManager.deleteReaderGroup(selfName);
         readerGroupManager.close();
     }
 
