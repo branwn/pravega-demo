@@ -1,46 +1,47 @@
 package com.dellemc.pravega;
 
-import io.netty.util.internal.SocketUtils;
 import io.pravega.client.ClientConfig;
 import io.pravega.client.EventStreamClientFactory;
 import io.pravega.client.admin.StreamManager;
-import io.pravega.client.stream.*;
+import io.pravega.client.stream.EventStreamWriter;
+import io.pravega.client.stream.EventWriterConfig;
+import io.pravega.client.stream.StreamConfiguration;
+import io.pravega.client.stream.impl.EventStreamWriterImpl;
 import io.pravega.client.stream.impl.JavaSerializer;
 
 import java.net.URI;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 public class Writer {
 
+    public static void writeData(EventStreamWriter<String> writer, String message) throws Exception {
+        CompletableFuture<Void> future = writer.writeEvent(message);
+        future.get();
+        writer.close();
+    }
 
-
-    public static void main(String[] args) throws InterruptedException  {
-
-
-        StreamConfiguration streamConfig = StreamConfiguration.builder()
-                .scalingPolicy(ScalingPolicy.fixed(1))
-                .build();
-        URI controllerURI = URI.create("tcp://localhost:9090");
-        try (StreamManager streamManager = StreamManager.create(controllerURI)) {
-            streamManager.createScope("tutorial");
-            streamManager.createStream("tutorial", "numbers", streamConfig);
-        }
-        ClientConfig clientConfig = ClientConfig.builder()
-                .controllerURI(controllerURI).build();
+    public static EventStreamWriter<String> getWriter(String url, String scope, String stream) throws Exception {
+        URI uri = new URI(url);
+        ClientConfig build = ClientConfig.builder().controllerURI(uri).build();
+        EventStreamClientFactory streamClientFactory = EventStreamClientFactory.withScope(scope, build);
         EventWriterConfig writerConfig = EventWriterConfig.builder().build();
-        EventStreamClientFactory factory = EventStreamClientFactory
-                .withScope("tutorial", clientConfig);
-        EventStreamWriter<Integer> writer = factory
-                .createEventWriter("numbers", new JavaSerializer<Integer>(), writerConfig);
-
-        for(int i = 0; i < 50; i += 1){
-            TimeUnit.MILLISECONDS.sleep(1000);
-            System.out.println(i);
-            writer.writeEvent(i);
-            writer.flush();
-        }
-        System.out.println("writing finished");
+        return streamClientFactory.createEventWriter(stream, new JavaSerializer<String>(), writerConfig);
+    }
 
 
+    public static void createStream(String url, String scope, String stream)throws  Exception{
+        URI uri = new URI(url);
+        StreamManager streamManager = StreamManager.create(uri);
+        streamManager.createScope(scope);
+
+        StreamConfiguration build = StreamConfiguration.builder().build();
+        streamManager.createStream(scope,stream,build);
+    }
+    public static void main(String[] args) throws Exception {
+        createStream("tcp://127.0.0.1:9090","dell","demo");
+        EventStreamWriter<String> writer = getWriter("tcp://127.0.0.1:9090", "dell", "demo");
+        writeData(writer,"EDG niubi");
+        System.out.println("write data successfully");
     }
 }
