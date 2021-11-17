@@ -8,6 +8,7 @@ import io.pravega.client.stream.*;
 import io.pravega.client.stream.impl.JavaSerializer;
 
 import java.net.URI;
+import java.util.concurrent.TimeUnit;
 
 public class Reader {
 
@@ -46,9 +47,13 @@ public class Reader {
                         new JavaSerializer<Integer>(), ReaderConfig.builder().build());
 
         Integer intEvent;
-        while ((intEvent = reader.readNextEvent(1000).getEvent()) != null) {
-            System.out.println(intEvent);
+        for (int i = 0; i < 100; i++) {
+            TimeUnit.MILLISECONDS.sleep(1000);
+            while ((intEvent = reader.readNextEvent(1000).getEvent()) != null) {
+                System.out.println(intEvent);
+            }
         }
+        
 
         reader.close();
 
