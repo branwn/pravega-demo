@@ -1,13 +1,13 @@
-com/dellemc/pravega/chattingRoom/Writer.java
- com.dellemc.pravega.chattingRoom.Writer
+com/dellemc/pravega/chattingRoom/UI.java
+ com.dellemc.pravega.chattingRoom.UI
 com/dellemc/pravega/chattingRoom/WriterDup.java
  com.dellemc.pravega.chattingRoom.WriterDup
 com/dellemc/pravega/chattingRoom/ReaderDup.java
  com.dellemc.pravega.chattingRoom.ReaderDup
+com/dellemc/pravega/chattingRoom/Writer.java
+ com.dellemc.pravega.chattingRoom.Writer
 com/dellemc/pravega/chattingRoom/UserRegister.java
  com.dellemc.pravega.chattingRoom.UserRegister
-com/dellemc/pravega/chattingRoom/UI.java
- com.dellemc.pravega.chattingRoom.UI
 com/dellemc/pravega/chattingRoom/Reader.java
  com.dellemc.pravega.chattingRoom.Reader
 com/dellemc/pravega/chattingRoom/Chat.java

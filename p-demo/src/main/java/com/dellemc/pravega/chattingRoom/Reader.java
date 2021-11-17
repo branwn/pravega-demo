@@ -14,12 +14,16 @@ public class Reader {
         ReaderGroupManager readerGroupManager = ReaderGroupManager.withScope(scope, uri);
 
         // clear reader group //////////////
-        readerGroupManager.deleteReaderGroup(groupName);
+        try {
+            readerGroupManager.deleteReaderGroup(groupName);
+        }catch (Exception e){
 
-//        readerGroupManager.createReaderGroup("numReader", readerGroupConfig);
+        }
 
-        ReaderGroupConfig build = ReaderGroupConfig.builder().stream(scope + "/" + stream).build();
-        readerGroupManager.createReaderGroup(groupName, build);
+
+
+        ReaderGroupConfig readerGroupConfig = ReaderGroupConfig.builder().stream(scope + "/" + stream).build();
+        readerGroupManager.createReaderGroup(groupName, readerGroupConfig);
 //        readerGroupManager.close();
         return readerGroupManager;
     }
@@ -44,11 +48,11 @@ public class Reader {
         }
     }
 
-    public static void main(String[] args) throws Exception {
-
-        createReaderGroup("tcp://127.0.0.1:9090", "dell", "demo", "dellemc");
-        EventStreamReader<String> reader = createReader("tcp://127.0.0.1:9090", "dell", "demo", "dellemc");
-        readData(reader);
-        reader.close();
-    }
+//    public static void main(String[] args) throws Exception {
+//
+//        createReaderGroup("tcp://127.0.0.1:9090", "dell", "demo", "dellemc");
+//        EventStreamReader<String> reader = createReader("tcp://127.0.0.1:9090", "dell", "demo", "dellemc");
+//        readData(reader);
+//        reader.close();
+//    }
 }
