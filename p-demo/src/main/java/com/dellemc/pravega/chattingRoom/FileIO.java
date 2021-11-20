@@ -9,6 +9,7 @@ import java.io.*;
 
 import static com.dellemc.pravega.chattingRoom.ReaderFactory.createReader;
 import static com.dellemc.pravega.chattingRoom.ReaderFactory.createReaderGroup;
+import static com.dellemc.pravega.chattingRoom.WriterFactory.createStream;
 import static com.dellemc.pravega.chattingRoom.WriterFactory.getWriter;
 
 
@@ -82,52 +83,57 @@ public class FileIO {
         readerGroupManager.close();
     }
 
-    public FileIO() throws Exception {
-        this.SELFNAME = "fileReader";
+    public FileIO() {
+
+        this.SELFNAME = "filetrans";
         this.SELFNAMEHASH = SELFNAME.hashCode();
         this.SELFNAME_READ = SELFNAME + "read";
         this.SELFNAME_READHASH = this.SELFNAME_READ.hashCode();
-        this.STREAMNAME = "fileInbox";
+        this.STREAMNAME = "fileInbox6";
 
-//        createStream(DEFAULT_CONTROLLER_URI, DEFAULT_SCOPE, STREAMNAME);
-        this.writer = getWriter(DEFAULT_CONTROLLER_URI, DEFAULT_SCOPE, STREAMNAME);
-
-
-        this.readerGroupManager = createReaderGroup(DEFAULT_CONTROLLER_URI, DEFAULT_SCOPE, STREAMNAME, SELFNAME_READ);
-        this.reader = createReader(DEFAULT_CONTROLLER_URI, DEFAULT_SCOPE, SELFNAME_READHASH + "", SELFNAME_READ);
+        try {
+            createStream(DEFAULT_CONTROLLER_URI, DEFAULT_SCOPE, STREAMNAME);
+            this.writer = getWriter(DEFAULT_CONTROLLER_URI, DEFAULT_SCOPE, STREAMNAME);
 
 
-
-        // write
-        File path = new File("./text.txt");
-        byte[] array = file_to_bytes(path);
-        writer.writeEvent(array);
-        //
-        //Files.readAllBytes() method
-        //byte[] array = Files.readAllBytes(path.toPath());
+            this.readerGroupManager = createReaderGroup(DEFAULT_CONTROLLER_URI, DEFAULT_SCOPE, STREAMNAME, SELFNAME_READ);
+            this.reader = createReader(DEFAULT_CONTROLLER_URI, DEFAULT_SCOPE, SELFNAME_READHASH + "", SELFNAME_READ);
 
 
-        // read and save
-        File dest = new File("/~/Downloads/text.txt");
-        if (!dest.exists()){
-            dest.createNewFile();
+            // write
+            File path = new File("./text.txt");
+            byte[] array = file_to_bytes(path);
+            writer.writeEvent(array);
+            //
+            //Files.readAllBytes() method
+            //byte[] array = Files.readAllBytes(path.toPath());
+
+
+            // read and save
+            File dest = new File("./temp/text.txt");
+            if (!dest.exists()) {
+                dest.createNewFile();
+            }
+            EventRead<byte[]> event = reader.readNextEvent(500);
+            if (event.getEvent() != null) {
+                byte[] bytes = event.getEvent();
+                bytes_to_file(bytes, dest);
+            }
+        } catch (Exception e){
+            // close
+
+            close();
+            e.printStackTrace();
+            System.out.println(e.getLocalizedMessage());
         }
-        EventRead<byte[]> event = reader.readNextEvent(500);
-        if (event.getEvent() != null) {
-            byte[] bytes = event.getEvent();
-            bytes_to_file(bytes, dest);
-        }
 
 
-        // close
-        close();
+
     }
 
     public static void main(String[] args) throws Exception {
 
         FileIO myFIO = new FileIO();
-
-
 
     }
 }

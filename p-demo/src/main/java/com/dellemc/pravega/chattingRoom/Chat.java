@@ -18,9 +18,9 @@ public class Chat implements AutoCloseable {
     protected static final String DEFAULT_SCOPE = "chattingRoom";
     protected static final String DEFAULT_CONTROLLER_URI = "tcp://127.0.0.1:9090";
 
-    protected final EventStreamWriter<byte[]> writer;
-    protected final EventStreamReader<byte[]> reader;
-    protected final ReaderGroupManager readerGroupManager;
+    protected EventStreamWriter<byte[]> writer;
+    protected EventStreamReader<byte[]> reader;
+    protected ReaderGroupManager readerGroupManager;
     protected final String SELFNAME;
     protected final int SELFNAMEHASH;
     protected final String STREAMNAME;
@@ -57,6 +57,7 @@ public class Chat implements AutoCloseable {
 
         createStream(DEFAULT_CONTROLLER_URI, DEFAULT_SCOPE, STREAMNAME);
         writer = getWriter(DEFAULT_CONTROLLER_URI, DEFAULT_SCOPE, STREAMNAME);
+
         readerGroupManager = createReaderGroup(DEFAULT_CONTROLLER_URI, DEFAULT_SCOPE, STREAMNAME, SELFNAME);
         reader = createReader(DEFAULT_CONTROLLER_URI, DEFAULT_SCOPE, SELFNAMEHASH + "", SELFNAME);
     }
