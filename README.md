@@ -1,7 +1,13 @@
 # pravega-demo
-This is a self-learning project, aiming to have a general understanding of pravega by realizing a chat room with the following functions based on preavega 0.9.1 and JRE 13:
+This is a chatting room demo.
 
-- 1 to 1 chatting in console;
+In the p-demo direcotry, I realized a Console based User Interface chatting room with the following functions based on Pravega 0.9.1 and JRE 13:
+
+- 1 to 1 chatting;
 - Group chatting;
 - Files transferring;
+
+
+
+In the p-spring-demo direcotry, I would try to build a Web User Interface and using the Pravega's REST APIs to realize a chatting room.
 
