@@ -1,7 +1,7 @@
 # pravega-demo
 This is a chatting room demo.
 
-In the p-demo direcotry, I realized a Console based User Interface chatting room with the following functions based on Pravega 0.9.1 and JRE 13:
+In the p-demo direcotry, I have realized a Console-based Chatting Room with the following functions based on Pravega 0.9.1 and JRE 13:
 
 - 1 to 1 chatting;
 - Group chatting;
