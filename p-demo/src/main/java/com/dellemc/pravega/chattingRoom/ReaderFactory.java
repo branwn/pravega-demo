@@ -30,7 +30,7 @@ public class ReaderFactory {
         ClientConfig build = ClientConfig.builder().controllerURI(uri).build();
         EventStreamClientFactory streamClientFactory = EventStreamClientFactory.withScope(scope, build);
         ReaderConfig build1 = ReaderConfig.builder().build();
-        EventStreamReader<String> reader = streamClientFactory.createReader(readerId, groupName, new JavaSerializer<String>(), build1);
+        EventStreamReader<String> reader = streamClientFactory.createReader(readerId, groupName, new JavaSerializer<>(), build1);
         return reader;
     }
 

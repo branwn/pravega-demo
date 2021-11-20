@@ -22,11 +22,11 @@ public class WriterFactory {
         ClientConfig build = ClientConfig.builder().controllerURI(uri).build();
         EventStreamClientFactory streamClientFactory = EventStreamClientFactory.withScope(scope, build);
         EventWriterConfig writerConfig = EventWriterConfig.builder().build();
-        return streamClientFactory.createEventWriter(stream, new JavaSerializer<String>(), writerConfig);
+        return streamClientFactory.createEventWriter(stream, new JavaSerializer<>(), writerConfig);
     }
 
     // the stream creator
-    public static void createStream(String url, String scope, String stream)throws  Exception{
+    public static void createStream(String url, String scope, String stream) throws Exception{
         URI uri = new URI(url);
         StreamManager streamManager = StreamManager.create(uri);
         streamManager.createScope(scope);
