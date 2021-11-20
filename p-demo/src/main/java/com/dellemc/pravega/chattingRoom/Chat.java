@@ -31,8 +31,7 @@ public class Chat implements AutoCloseable {
         while (true) {
             EventRead<byte[]> event = reader.readNextEvent(500);
             if (event.getEvent() == null) { break; }
-            String s = new String(event.getEvent());
-            System.out.println(s);
+            System.out.println(new String(event.getEvent()));
         }
     }
 
