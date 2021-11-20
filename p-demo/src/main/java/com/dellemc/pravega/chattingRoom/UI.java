@@ -49,17 +49,18 @@ public class UI {
     private static void chattingMainLoop(String selfName, int inboxHashCode) throws Exception {
         System.out.println("Room " + inboxHashCode + " (Hash Code) has been successfully created.");
         System.out.println(LINE);
-        Chat myChat = new Chat(selfName, inboxHashCode + "");
-        ReadingThread readMsg = new ReadingThread(myChat, refreshLatency);
-        readMsg.start();
-        Scanner s = new Scanner(System.in);
-        for (String input = ""; !(input.equals("exit")); input = s.nextLine()) {
-            if (!input.equals("")) {
-                myChat.sendMsg(input);
+        try (Chat myChat = new Chat(selfName, inboxHashCode + "")) {
+            ReadingThread readMsg = new ReadingThread(myChat, refreshLatency);
+            readMsg.start();
+            Scanner s = new Scanner(System.in);
+            for (String input = ""; !(input.equals("exit")); input = s.nextLine()) {
+                if (!input.equals("")) {
+                    myChat.sendMsg(input);
+                }
             }
+            readMsg.interrupt();
         }
-        readMsg.interrupt();
-        myChat.close();
+
     }
 
     public static void main(String[] args) {

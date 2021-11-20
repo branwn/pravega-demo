@@ -1,5 +1,6 @@
 /*
 This class would maintain a Writer to write to the inbox and a Reader to read the inbox,
+with implementing AutoCloseable;
 */
 
 package com.dellemc.pravega.chattingRoom;
@@ -13,13 +14,16 @@ import java.util.concurrent.CompletableFuture;
 import static com.dellemc.pravega.chattingRoom.ReaderFactory.*;
 import static com.dellemc.pravega.chattingRoom.WriterFactory.*;
 
-public class Chat {
-    EventStreamWriter<String> writer;
-    EventStreamReader<String> reader;
-    ReaderGroupManager readerGroupManager;
-    String selfName;
-    int selfNameHash;
-    String inboxStream;
+public class Chat implements AutoCloseable {
+    protected static final String DEFAULT_SCOPE = "chattingRoom";
+    protected static final String DEFAULT_CONTROLLER_URI = "tcp://127.0.0.1:9090";
+
+    protected final EventStreamWriter<String> writer;
+    protected final EventStreamReader<String> reader;
+    protected final ReaderGroupManager readerGroupManager;
+    protected final String SELFNAME;
+    protected final int SELFNAMEHASH;
+    protected final String STREAMNAME;
 
 
     // this function is used to read and print data from a specific stream reader
@@ -33,7 +37,7 @@ public class Chat {
 
     // this function is used to write data to a specific stream reader
     public void sendMsg(String message) throws Exception {
-        CompletableFuture<Void> future = writer.writeEvent(selfName + ": " + message);
+        CompletableFuture<Void> future = writer.writeEvent(SELFNAME + ": " + message);
         future.get();
     }
 
@@ -42,19 +46,19 @@ public class Chat {
         // close
         writer.close();
         reader.close();
-        readerGroupManager.deleteReaderGroup(selfName);
+        readerGroupManager.deleteReaderGroup(SELFNAME);
         readerGroupManager.close();
     }
 
     public Chat(String selfName, String inboxStream) throws Exception {
-        this.selfName = selfName;
-        this.selfNameHash = selfName.hashCode();
-        this.inboxStream = inboxStream;
+        this.SELFNAME = selfName;
+        this.SELFNAMEHASH = selfName.hashCode();
+        this.STREAMNAME = inboxStream;
 
-        createStream("tcp://127.0.0.1:9090","chattingRoom", this.inboxStream);
-        writer = getWriter("tcp://127.0.0.1:9090", "chattingRoom", this.inboxStream);
-        readerGroupManager = createReaderGroup("tcp://127.0.0.1:9090", "chattingRoom", this.inboxStream, selfName);
-        reader = createReader("tcp://127.0.0.1:9090", "chattingRoom", selfNameHash + "", selfName);
+        createStream(DEFAULT_CONTROLLER_URI, DEFAULT_SCOPE, STREAMNAME);
+        writer = getWriter(DEFAULT_CONTROLLER_URI, DEFAULT_SCOPE, STREAMNAME);
+        readerGroupManager = createReaderGroup(DEFAULT_CONTROLLER_URI, DEFAULT_SCOPE, STREAMNAME, SELFNAME);
+        reader = createReader(DEFAULT_CONTROLLER_URI, DEFAULT_SCOPE, SELFNAMEHASH + "", SELFNAME);
     }
 
 
