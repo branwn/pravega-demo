@@ -25,12 +25,12 @@ public class ReaderFactory {
     }
 
     // this is a stream reader factory
-    public static EventStreamReader<String> createReader(String url, String scope, String readerId, String groupName) throws Exception {
+    public static EventStreamReader<byte[]> createReader(String url, String scope, String readerId, String groupName) throws Exception {
         URI uri = new URI(url);
         ClientConfig build = ClientConfig.builder().controllerURI(uri).build();
         EventStreamClientFactory streamClientFactory = EventStreamClientFactory.withScope(scope, build);
         ReaderConfig build1 = ReaderConfig.builder().build();
-        EventStreamReader<String> reader = streamClientFactory.createReader(readerId, groupName, new JavaSerializer<>(), build1);
+        EventStreamReader<byte[]> reader = streamClientFactory.createReader(readerId, groupName, new JavaSerializer<>(), build1);
         return reader;
     }
 

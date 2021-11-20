@@ -18,8 +18,8 @@ public class Chat implements AutoCloseable {
     protected static final String DEFAULT_SCOPE = "chattingRoom";
     protected static final String DEFAULT_CONTROLLER_URI = "tcp://127.0.0.1:9090";
 
-    protected final EventStreamWriter<String> writer;
-    protected final EventStreamReader<String> reader;
+    protected final EventStreamWriter<byte[]> writer;
+    protected final EventStreamReader<byte[]> reader;
     protected final ReaderGroupManager readerGroupManager;
     protected final String SELFNAME;
     protected final int SELFNAMEHASH;
@@ -29,15 +29,16 @@ public class Chat implements AutoCloseable {
     // this function is used to read and print data from a specific stream reader
     public void recieveMsg() {
         while (true) {
-            EventRead<String> event = reader.readNextEvent(500);
+            EventRead<byte[]> event = reader.readNextEvent(500);
             if (event.getEvent() == null) { break; }
-            System.out.println(event.getEvent());
+            String s = new String(event.getEvent());
+            System.out.println(s);
         }
     }
 
     // this function is used to write data to a specific stream reader
     public void sendMsg(String message) throws Exception {
-        CompletableFuture<Void> future = writer.writeEvent(SELFNAME + ": " + message);
+        CompletableFuture<Void> future = writer.writeEvent((SELFNAME + ": " + message).getBytes());
         future.get();
     }
 

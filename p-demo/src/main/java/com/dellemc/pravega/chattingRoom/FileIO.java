@@ -29,9 +29,9 @@ public class FileIO {
 
 
         createStream(DEFAULT_CONTROLLER_URI, DEFAULT_SCOPE, streamName);
-        EventStreamWriter<String> writer = getWriter(DEFAULT_CONTROLLER_URI, DEFAULT_SCOPE, streamName);
+        EventStreamWriter<byte[]> writer = getWriter(DEFAULT_CONTROLLER_URI, DEFAULT_SCOPE, streamName);
         ReaderGroupManager readerGroupManager = createReaderGroup(DEFAULT_CONTROLLER_URI, DEFAULT_SCOPE, streamName, selfName);
-        EventStreamReader<String> reader = createReader(DEFAULT_CONTROLLER_URI, DEFAULT_SCOPE, selfNameHash + "", selfName);
+        EventStreamReader<byte[]> reader = createReader(DEFAULT_CONTROLLER_URI, DEFAULT_SCOPE, selfNameHash + "", selfName);
 
 
 //        Person person = new Person();
