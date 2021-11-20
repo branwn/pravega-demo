@@ -1,16 +1,23 @@
+/*
+This class is the Console based User Interface;
+Which would run a new thread to keep refreshing the inbox information.
+follow the instruction to generate a 1 to 1 chatting or a group chat.
+type "exit" to exit the chatting room.
+*/
+
 package com.dellemc.pravega.chattingRoom;
 import java.util.Scanner;
 
-import static com.dellemc.pravega.chattingRoom.UserRegister.chatRoomRegister;
 
 
 public class UI {
     static String LINE      = "=========================";
     static String HALFLINE  = "============";
     static String HALFSPACE = "            ";
+    static int refreshLatency = 1000;
 
-
-    private static void intro() throws Exception {
+    // this function is used to generate a chatting room and save the username
+    private static void initializor() throws Exception {
         String selfName = "";
         int inboxHashCode = 0;
         System.out.println(LINE);
@@ -35,17 +42,15 @@ public class UI {
                 break;
             }
         }
-        mainLoop(selfName, inboxHashCode);
+        chattingMainLoop(selfName, inboxHashCode);
     }
 
-    private static void mainLoop(String selfName, int inboxHashCode) throws Exception {
-        // user register
-        chatRoomRegister(inboxHashCode + "");
-//        chatRoomRegister(peerNameHash);
+    // this is the main chattingLoop, which will run a reading thread to keep reading the inbox
+    private static void chattingMainLoop(String selfName, int inboxHashCode) throws Exception {
         System.out.println("Room " + inboxHashCode + " (Hash Code) has been successfully created.");
         System.out.println(LINE);
-        Chat myChat = new Chat(selfName, inboxHashCode);
-        ReadMsgThread readMsg = new ReadMsgThread(myChat);
+        Chat myChat = new Chat(selfName, inboxHashCode + "");
+        ReadingThread readMsg = new ReadingThread(myChat, refreshLatency);
         readMsg.start();
         Scanner s = new Scanner(System.in);
         for (String input = ""; !(input.equals("exit")); input = s.nextLine()) {
@@ -59,7 +64,7 @@ public class UI {
 
     public static void main(String[] args) {
         try {
-            intro();
+            initializor();
         }catch (Exception e){
             System.out.printf("[Debug] Fail to open a chatting room");
         }
@@ -67,26 +72,25 @@ public class UI {
 }
 
 
-
-class ReadMsgThread extends Thread {
+class ReadingThread extends Thread {
     private Thread t;
     private Chat myChat;
-    private int sleepTime = 1000;
+    private int refreshLatency = 1000;
 
-    ReadMsgThread(Chat myChat) {
+    ReadingThread(Chat myChat) {
         this.myChat = myChat;
     }
 
-    ReadMsgThread(Chat myChat, int sleepTime) {
+    ReadingThread(Chat myChat, int refreshLatency) {
         this.myChat = myChat;
-        this.sleepTime = sleepTime;
+        this.refreshLatency = refreshLatency;
     }
 
     public void run() {
         try {
             while (! isInterrupted()){
                 myChat.recieveMsg();
-                Thread.sleep(this.sleepTime);
+                Thread.sleep(this.refreshLatency);
             }
         } catch (InterruptedException e) {
 

@@ -5,11 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e352b32e-d2c7-41f9-9faa-2ba94633929a" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/p-demo/bin/main/com/dellemc/pravega/Reader.class" beforeDir="false" afterPath="$PROJECT_DIR$/p-demo/bin/main/com/dellemc/pravega/Reader.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/p-demo/bin/main/com/dellemc/pravega/Writer.class" beforeDir="false" afterPath="$PROJECT_DIR$/p-demo/bin/main/com/dellemc/pravega/Writer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/p-demo/src/main/java/com/dellemc/pravega/Reader.java" beforeDir="false" afterPath="$PROJECT_DIR$/p-demo/src/main/java/com/dellemc/pravega/Reader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/p-demo/src/main/java/com/dellemc/pravega/Writer.java" beforeDir="false" afterPath="$PROJECT_DIR$/p-demo/src/main/java/com/dellemc/pravega/Writer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/p-spring-demo/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/p-spring-demo/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/p-spring-demo/src/main/java/com/example/pspringdemo/PSpringDemoApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/p-spring-demo/src/main/java/com/example/pspringdemo/PSpringDemoApplication.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -113,6 +110,7 @@
       <workItem from="1637084615604" duration="982000" />
       <workItem from="1637085626198" duration="602000" />
       <workItem from="1637131888392" duration="166000" />
+      <workItem from="1637388677592" duration="47000" />
     </task>
     <servers />
   </component>
