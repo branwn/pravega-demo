@@ -1,9 +1,11 @@
-com/dellemc/pravega/chattingRoom/Chat.java
- com.dellemc.pravega.chattingRoom.Chat
+com/dellemc/pravega/chattingRoom/ChatRoomClient.java
+ com.dellemc.pravega.chattingRoom.ChatRoomClient
+com/dellemc/pravega/chattingRoom/FileUtil.java
+ com.dellemc.pravega.chattingRoom.FileUtil
+com/dellemc/pravega/chattingRoom/UserInterface.java
+ com.dellemc.pravega.chattingRoom.ReadingThread
+ com.dellemc.pravega.chattingRoom.UserInterface
 com/dellemc/pravega/chattingRoom/ReaderFactory.java
  com.dellemc.pravega.chattingRoom.ReaderFactory
 com/dellemc/pravega/chattingRoom/WriterFactory.java
  com.dellemc.pravega.chattingRoom.WriterFactory
-com/dellemc/pravega/chattingRoom/UI.java
- com.dellemc.pravega.chattingRoom.ReadingThread
- com.dellemc.pravega.chattingRoom.UI
