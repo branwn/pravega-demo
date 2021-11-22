@@ -21,6 +21,7 @@ public class Chat implements AutoCloseable {
     protected static final String DEFAULT_CONTROLLER_URI = "tcp://127.0.0.1:9090";
     protected static final String FILE_TAG = "upload@";
     protected static final byte[] FILE_TAG_BYTE = "upload@".getBytes();
+    protected static final String FILES_RECEIVED_FOLDER = "./files_received/";
 
     protected EventStreamWriter<byte[]> chatWriter;
     protected EventStreamReader<byte[]> chatReader;
@@ -33,45 +34,21 @@ public class Chat implements AutoCloseable {
 
 
     public static byte[] file_to_bytes(File file)  throws IOException {
-
-        // Creating an object of FileInputStream to
-        // read from a file
         FileInputStream fl = new FileInputStream(file);
-
-        // Now creating byte array of same length as file
         byte[] arr = new byte[(int)file.length()];
-
-        // Reading file content to byte array
-        // using standard read() method
         fl.read(arr);
-
-        // lastly closing an instance of file input stream
-        // to avoid memory leakage
         fl.close();
-
-        // Returning above byte array
         return arr;
     }
 
     static void bytes_to_file(byte[] bytes, File file)  {
         try {
-
-            // Initialize a pointer
-            // in file using OutputStream
-            OutputStream
-                    os
-                    = new FileOutputStream(file);
-
-            // Starts writing the bytes in it
+            OutputStream os = new FileOutputStream(file);
             os.write(bytes);
-//            System.out.println("Successfully"
-//                    + " byte inserted");
-
-            // Close the file
             os.close();
         }
-
         catch (Exception e) {
+            System.out.println("[Debug] Fail to receive a file.");
             System.out.println("Exception: " + e);
         }
     }
@@ -88,9 +65,9 @@ public class Chat implements AutoCloseable {
 
     }
 
-    public void readFile(byte[] bytes) {
+    public void readFile(String fileName, byte[] bytes) {
         try{
-            File dest = new File("./dest.txt");
+            File dest = new File(FILES_RECEIVED_FOLDER + "/" + fileName);
             if (!dest.exists()) {
                 dest.createNewFile();
             }
@@ -101,27 +78,33 @@ public class Chat implements AutoCloseable {
     }
 
     // this function is used to read and print data from a specific stream reader
-    public void receiveMsg() {
+    public void receiveData() {
         while (true) {
             EventRead<byte[]> event = chatReader.readNextEvent(500);
-            byte[] temp = event.getEvent();
-            if (temp == null) { break; }
-            if (!Arrays.equals(temp, FILE_TAG_BYTE)) {
-                System.out.println(new String(temp));
+            if (event.getEvent() == null) { break; }
+            System.out.println("[Debug] String received: " + new String(event.getEvent()));
+            if (!Arrays.equals(event.getEvent(), FILE_TAG_BYTE)) {
+                System.out.println(new String(event.getEvent()));
             } else {
-                System.out.println("Receiving a file...");
+                EventRead<byte[]> nameEvent = chatReader.readNextEvent(500);
+                String fileName = new String(nameEvent.getEvent());
+                System.out.println("Receiving " + fileName + "...");
                 EventRead<byte[]> fileEvent = chatReader.readNextEvent(500);
                 byte[] bytes = fileEvent.getEvent();
-                readFile(bytes);
+                readFile(fileName, bytes);
             }
 
         }
     }
 
     // this function is used to write data to a specific stream reader
-    public void sendMsg(String message) throws Exception {
+    public void sendData(String message) throws Exception {
         if (message.startsWith(FILE_TAG)){
             chatWriter.writeEvent(FILE_TAG_BYTE);
+            String[] directoryName = message.split("/");
+            System.out.println(Arrays.toString(directoryName));
+            String fileName = directoryName[directoryName.length - 1];
+            chatWriter.writeEvent(fileName.getBytes());
             sendFile();
             chatWriter.flush();
         } else if (!message.equals("")) {

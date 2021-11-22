@@ -60,7 +60,7 @@ public class UI {
             readMsg.start();
             Scanner s = new Scanner(System.in);
             for (String input = ""; !(input.equals("exit")); input = s.nextLine()) {
-                myChat.sendMsg(input);
+                myChat.sendData(input);
             }
             readMsg.interrupt();
         }
@@ -95,7 +95,7 @@ class ReadingThread extends Thread {
     public void run() {
         try {
             while (! isInterrupted()){
-                myChat.receiveMsg();
+                myChat.receiveData();
                 Thread.sleep(this.refreshLatency);
             }
         } catch (InterruptedException e) {
