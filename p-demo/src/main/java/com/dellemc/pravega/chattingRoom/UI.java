@@ -50,6 +50,7 @@ public class UI {
         System.out.println("Room " + inboxHashCode + " (Hash Code) has been successfully created.");
         System.out.println(LINE);
         try (Chat myChat = new Chat(selfName, inboxHashCode + "")) {
+            System.out.println("Let's start chatting!");
             ReadingThread readMsg = new ReadingThread(myChat, refreshLatency);
             readMsg.start();
             Scanner s = new Scanner(System.in);
