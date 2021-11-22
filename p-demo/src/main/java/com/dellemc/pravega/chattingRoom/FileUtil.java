@@ -4,9 +4,10 @@ import io.pravega.client.stream.EventStreamWriter;
 import java.io.*;
 
 public class FileUtil {
-    protected static final String FILES_RECEIVED_FOLDER = "./files_received/";
+    private static final String FILES_RECEIVED_FOLDER = "./files_received/";
 
-    public static byte[] file_to_bytes(File file)  throws IOException {
+    // this function is used to encode a file to byte[] for sending using convenient
+    private static byte[] fileToBytes(File file)  throws IOException {
         FileInputStream fl = new FileInputStream(file);
         byte[] arr = new byte[(int)file.length()];
         fl.read(arr);
@@ -14,7 +15,8 @@ public class FileUtil {
         return arr;
     }
 
-    public static void bytes_to_file(byte[] bytes, File file)  {
+    // this function is used to decode a file from a byte[]
+    private static void bytesToFile(byte[] bytes, File file)  {
         try {
             OutputStream os = new FileOutputStream(file);
             os.write(bytes);
@@ -26,11 +28,11 @@ public class FileUtil {
         }
     }
 
+
     public static void sendFile(EventStreamWriter<byte[]> writer, String fileName) throws IOException {
         File path = new File(fileName);
-        byte[] bytes = file_to_bytes(path);
+        byte[] bytes = fileToBytes(path);
         writer.writeEvent(bytes);
-
     }
 
     public static void readFile(String fileName, byte[] bytes) {
@@ -39,7 +41,7 @@ public class FileUtil {
             if (!dest.exists()) {
                 dest.createNewFile();
             }
-            bytes_to_file(bytes, dest);
+            bytesToFile(bytes, dest);
         }catch (Exception e) {
             System.out.println("[Debug] Fail to receive the file.");
         }

@@ -20,11 +20,10 @@ public class ChatRoomClient implements AutoCloseable {
     protected static final String DEFAULT_SCOPE = "chattingRoom";
     protected static final String DEFAULT_CONTROLLER_URI = "tcp://127.0.0.1:9090";
     protected static final String FILE_TAG = "upload@";
-    protected static final String FILES_RECEIVED_FOLDER = "./files_received/";
 
-    protected EventStreamWriter<byte[]> chatWriter;
-    protected EventStreamReader<byte[]> chatReader;
-    protected ReaderGroupManager chatReaderGroupManager;
+    protected final EventStreamWriter<byte[]> chatWriter;
+    protected final EventStreamReader<byte[]> chatReader;
+    protected final ReaderGroupManager chatReaderGroupManager;
     protected final String SELF_NAME;
     protected final int SELF_NAME_HASH;
     protected final String CHAT_STREAM_NAME;
