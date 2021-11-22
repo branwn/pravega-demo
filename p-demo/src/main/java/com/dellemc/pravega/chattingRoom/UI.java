@@ -45,13 +45,7 @@ public class UI {
         chattingMainLoop(selfName, inboxHashCode);
     }
 
-    private static void sendFile (Chat my_chat) {
-        my_chat.sendFile();
-    }
 
-    private static void readFile (Chat my_chat) {
-        my_chat.readFile();
-    }
 
     // this is the main chattingLoop, which will run a reading thread to keep reading the inbox
     private static void chattingMainLoop(String selfName, int chatInboxHashCode) throws Exception {
@@ -66,12 +60,7 @@ public class UI {
             readMsg.start();
             Scanner s = new Scanner(System.in);
             for (String input = ""; !(input.equals("exit")); input = s.nextLine()) {
-                if (input.startsWith(FILE_TAG)){
-                    myChat.sendMsg(FILE_TAG);
-                    sendFile(myChat);
-                } else if (!input.equals("")) {
-                    myChat.sendMsg(input);
-                }
+                myChat.sendMsg(input);
             }
             readMsg.interrupt();
         }

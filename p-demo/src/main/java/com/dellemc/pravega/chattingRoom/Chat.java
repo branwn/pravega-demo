@@ -10,6 +10,7 @@ import io.pravega.client.stream.EventStreamReader;
 import io.pravega.client.stream.EventStreamWriter;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
 
 import static com.dellemc.pravega.chattingRoom.ReaderFactory.*;
@@ -19,6 +20,7 @@ public class Chat implements AutoCloseable {
     protected static final String DEFAULT_SCOPE = "chattingRoom";
     protected static final String DEFAULT_CONTROLLER_URI = "tcp://127.0.0.1:9090";
     protected static final String FILE_TAG = "upload@";
+    protected static final byte[] FILE_TAG_BYTE = "upload@".getBytes();
 
     protected EventStreamWriter<byte[]> chatWriter;
     protected EventStreamReader<byte[]> chatReader;
@@ -62,8 +64,8 @@ public class Chat implements AutoCloseable {
 
             // Starts writing the bytes in it
             os.write(bytes);
-            System.out.println("Successfully"
-                    + " byte inserted");
+//            System.out.println("Successfully"
+//                    + " byte inserted");
 
             // Close the file
             os.close();
@@ -86,17 +88,13 @@ public class Chat implements AutoCloseable {
 
     }
 
-    public void readFile() {
+    public void readFile(byte[] bytes) {
         try{
             File dest = new File("./dest.txt");
             if (!dest.exists()) {
                 dest.createNewFile();
             }
-            EventRead<byte[]> event = chatReader.readNextEvent(100);
-            if (event.getEvent() != null) {
-                byte[] bytes = event.getEvent();
-                bytes_to_file(bytes, dest);
-            }
+            bytes_to_file(bytes, dest);
         }catch (Exception e) {
             System.out.println("[Debug] Fail to receive the file.");
         }
@@ -106,15 +104,32 @@ public class Chat implements AutoCloseable {
     public void receiveMsg() {
         while (true) {
             EventRead<byte[]> event = chatReader.readNextEvent(500);
-            if (event.getEvent() == null) { break; }
-            System.out.println(new String(event.getEvent()));
+            byte[] temp = event.getEvent();
+            if (temp == null) { break; }
+            if (!Arrays.equals(temp, FILE_TAG_BYTE)) {
+                System.out.println(new String(temp));
+            } else {
+                System.out.println("Receiving a file...");
+                EventRead<byte[]> fileEvent = chatReader.readNextEvent(500);
+                byte[] bytes = fileEvent.getEvent();
+                readFile(bytes);
+            }
+
         }
     }
 
     // this function is used to write data to a specific stream reader
     public void sendMsg(String message) throws Exception {
-        CompletableFuture<Void> future = chatWriter.writeEvent((SELF_NAME + ": " + message).getBytes());
-        future.get();
+        if (message.startsWith(FILE_TAG)){
+            chatWriter.writeEvent(FILE_TAG_BYTE);
+            sendFile();
+            chatWriter.flush();
+        } else if (!message.equals("")) {
+            chatWriter.writeEvent((SELF_NAME + ": " + message).getBytes());
+            chatWriter.flush();
+//            CompletableFuture<Void> future = chatWriter.writeEvent((SELF_NAME + ": " + message).getBytes());
+//            future.get();
+        }
     }
 
     // this function is used to close the writer, reader, and group_manager
