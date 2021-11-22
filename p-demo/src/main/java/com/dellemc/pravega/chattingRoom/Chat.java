@@ -18,6 +18,7 @@ import static com.dellemc.pravega.chattingRoom.WriterFactory.*;
 public class Chat implements AutoCloseable {
     protected static final String DEFAULT_SCOPE = "chattingRoom";
     protected static final String DEFAULT_CONTROLLER_URI = "tcp://127.0.0.1:9090";
+    protected static final String FILE_TAG = "upload@";
 
     protected EventStreamWriter<byte[]> chatWriter;
     protected EventStreamReader<byte[]> chatReader;

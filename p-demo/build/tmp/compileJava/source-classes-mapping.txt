@@ -1,6 +1,3 @@
-com/dellemc/pravega/chattingRoom/FileIO.java
- com.dellemc.pravega.chattingRoom.FileIO
- com.dellemc.pravega.chattingRoom.Person
 com/dellemc/pravega/chattingRoom/Chat.java
  com.dellemc.pravega.chattingRoom.Chat
 com/dellemc/pravega/chattingRoom/ReaderFactory.java

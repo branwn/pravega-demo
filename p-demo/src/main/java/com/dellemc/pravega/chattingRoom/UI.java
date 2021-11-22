@@ -11,17 +11,17 @@ import java.util.Scanner;
 
 
 public class UI {
-    static String LINE      = "=========================";
-    static String HALFLINE  = "============";
-    static String HALFSPACE = "            ";
-    static int refreshLatency = 1000;
+    static final String LINE      = "=========================";
+    static final String SPACE = "            ";
+    static final int refreshLatency = 1000;
+    static final String FILE_TAG = "upload@";
 
     // this function is used to generate a chatting room and save the username
     private static void initializor() throws Exception {
         String selfName = "";
         int inboxHashCode = 0;
         System.out.println(LINE);
-        System.out.println(HALFSPACE + "Welcome to the chat room!");
+        System.out.println(SPACE + "Welcome to the chat room!");
 
         Scanner s = new Scanner(System.in);  // Create a Scanner object
         System.out.print("Please enter you name: ");
@@ -66,9 +66,8 @@ public class UI {
             readMsg.start();
             Scanner s = new Scanner(System.in);
             for (String input = ""; !(input.equals("exit")); input = s.nextLine()) {
-                if (input.equals("/read_file")){
-                    readFile(myChat);
-                } else if (input.equals("/send_file")){
+                if (input.startsWith(FILE_TAG)){
+                    myChat.sendMsg(FILE_TAG);
                     sendFile(myChat);
                 } else if (!input.equals("")) {
                     myChat.sendMsg(input);
