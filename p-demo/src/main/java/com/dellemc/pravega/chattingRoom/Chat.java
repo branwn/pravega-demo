@@ -9,6 +9,7 @@ import io.pravega.client.stream.EventRead;
 import io.pravega.client.stream.EventStreamReader;
 import io.pravega.client.stream.EventStreamWriter;
 
+import java.io.*;
 import java.util.concurrent.CompletableFuture;
 
 import static com.dellemc.pravega.chattingRoom.ReaderFactory.*;
@@ -21,17 +22,87 @@ public class Chat implements AutoCloseable {
     protected EventStreamWriter<byte[]> chatWriter;
     protected EventStreamReader<byte[]> chatReader;
     protected ReaderGroupManager chatReaderGroupManager;
-    protected EventStreamWriter<byte[]> fileWriter;
-    protected EventStreamReader<byte[]> fileReader;
-    protected ReaderGroupManager fileReaderGroupManager;
     protected final String SELF_NAME;
     protected final int SELF_NAME_HASH;
     protected final String CHAT_STREAM_NAME;
     protected final String FILE_STREAM_NAME;
 
 
+
+    public static byte[] file_to_bytes(File file)  throws IOException {
+
+        // Creating an object of FileInputStream to
+        // read from a file
+        FileInputStream fl = new FileInputStream(file);
+
+        // Now creating byte array of same length as file
+        byte[] arr = new byte[(int)file.length()];
+
+        // Reading file content to byte array
+        // using standard read() method
+        fl.read(arr);
+
+        // lastly closing an instance of file input stream
+        // to avoid memory leakage
+        fl.close();
+
+        // Returning above byte array
+        return arr;
+    }
+
+    static void bytes_to_file(byte[] bytes, File file)  {
+        try {
+
+            // Initialize a pointer
+            // in file using OutputStream
+            OutputStream
+                    os
+                    = new FileOutputStream(file);
+
+            // Starts writing the bytes in it
+            os.write(bytes);
+            System.out.println("Successfully"
+                    + " byte inserted");
+
+            // Close the file
+            os.close();
+        }
+
+        catch (Exception e) {
+            System.out.println("Exception: " + e);
+        }
+    }
+
+
+    public void sendFile() {
+        try{
+            File path = new File("./from.txt");
+            byte[] bytes = file_to_bytes(path);
+            chatWriter.writeEvent(bytes);
+        }catch (Exception e) {
+            System.out.println("[Debug] Fail to send the file.");
+        }
+
+    }
+
+    public void readFile() {
+        try{
+            File dest = new File("./dest.txt");
+            if (!dest.exists()) {
+                dest.createNewFile();
+            }
+            EventRead<byte[]> event = chatReader.readNextEvent(100);
+            if (event.getEvent() != null) {
+                byte[] bytes = event.getEvent();
+                bytes_to_file(bytes, dest);
+            }
+        }catch (Exception e) {
+            System.out.println("[Debug] Fail to receive the file.");
+        }
+    }
+
     // this function is used to read and print data from a specific stream reader
-    public void recieveMsg() {
+    public void receiveMsg() {
         while (true) {
             EventRead<byte[]> event = chatReader.readNextEvent(500);
             if (event.getEvent() == null) { break; }
@@ -60,22 +131,11 @@ public class Chat implements AutoCloseable {
         this.CHAT_STREAM_NAME = inboxHash + "";
         this.FILE_STREAM_NAME = inboxHash + 1 + "";
 
-        System.out.println(CHAT_STREAM_NAME);
-        System.out.println(FILE_STREAM_NAME);
-
+        // create chat stream
         createStream(DEFAULT_CONTROLLER_URI, DEFAULT_SCOPE, CHAT_STREAM_NAME);
         chatWriter = getWriter(DEFAULT_CONTROLLER_URI, DEFAULT_SCOPE, CHAT_STREAM_NAME);
-
         chatReaderGroupManager = createReaderGroup(DEFAULT_CONTROLLER_URI, DEFAULT_SCOPE, CHAT_STREAM_NAME, SELF_NAME);
         chatReader = createReader(DEFAULT_CONTROLLER_URI, DEFAULT_SCOPE, SELF_NAME_HASH + "", SELF_NAME);
-
-
-//        createStream(DEFAULT_CONTROLLER_URI, DEFAULT_SCOPE, INBOXHASH);
-//        chatWriter = getWriter(DEFAULT_CONTROLLER_URI, DEFAULT_SCOPE, INBOXHASH);
-//
-//        chatReaderGroupManager = createReaderGroup(DEFAULT_CONTROLLER_URI, DEFAULT_SCOPE, INBOXHASH, SELFNAME);
-//        chatReader = createReader(DEFAULT_CONTROLLER_URI, DEFAULT_SCOPE, SELFNAMEHASH + "", SELFNAME);
-
 
     }
 

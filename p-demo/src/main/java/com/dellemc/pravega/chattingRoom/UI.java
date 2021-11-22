@@ -45,17 +45,32 @@ public class UI {
         chattingMainLoop(selfName, inboxHashCode);
     }
 
+    private static void sendFile (Chat my_chat) {
+        my_chat.sendFile();
+    }
+
+    private static void readFile (Chat my_chat) {
+        my_chat.readFile();
+    }
+
     // this is the main chattingLoop, which will run a reading thread to keep reading the inbox
-    private static void chattingMainLoop(String selfName, int inboxHashCode) throws Exception {
-        System.out.println("Room " + inboxHashCode + " (Hash Code) has been successfully created.");
+    private static void chattingMainLoop(String selfName, int chatInboxHashCode) throws Exception {
+        System.out.println("ChatRoom " + chatInboxHashCode + " (Hash Code) has been successfully created.");
         System.out.println(LINE);
-        try (Chat myChat = new Chat(selfName, inboxHashCode)) {
+        try (Chat myChat = new Chat(selfName, chatInboxHashCode)) {
+            // [Debug]
+
+
             System.out.println("Let's start chatting!");
             ReadingThread readMsg = new ReadingThread(myChat, refreshLatency);
             readMsg.start();
             Scanner s = new Scanner(System.in);
             for (String input = ""; !(input.equals("exit")); input = s.nextLine()) {
-                if (!input.equals("")) {
+                if (input.equals("/read_file")){
+                    readFile(myChat);
+                } else if (input.equals("/send_file")){
+                    sendFile(myChat);
+                } else if (!input.equals("")) {
                     myChat.sendMsg(input);
                 }
             }
@@ -68,6 +83,7 @@ public class UI {
         try {
             initializor();
         }catch (Exception e){
+            System.out.println(e.getMessage());
             System.out.printf("[Debug] Fail to open a chatting room");
         }
     }
@@ -91,7 +107,7 @@ class ReadingThread extends Thread {
     public void run() {
         try {
             while (! isInterrupted()){
-                myChat.recieveMsg();
+                myChat.receiveMsg();
                 Thread.sleep(this.refreshLatency);
             }
         } catch (InterruptedException e) {
