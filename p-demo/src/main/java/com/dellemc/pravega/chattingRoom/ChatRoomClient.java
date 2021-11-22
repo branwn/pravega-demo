@@ -51,6 +51,7 @@ public class ChatRoomClient implements AutoCloseable {
                 EventRead<byte[]> fileEvent = chatReader.readNextEvent(200);
                 continue;
             }
+
             // receive a file
             dataReceived = dataReceived.substring(FILE_TAG.length());
             String[] directoryName = dataReceived.split("/");
