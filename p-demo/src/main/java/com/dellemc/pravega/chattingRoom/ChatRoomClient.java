@@ -17,24 +17,24 @@ import static com.dellemc.pravega.chattingRoom.ReaderFactory.*;
 import static com.dellemc.pravega.chattingRoom.WriterFactory.*;
 
 public class ChatRoomClient implements AutoCloseable {
-    protected static final String DEFAULT_SCOPE = "chattingRoom";
-    protected static final String DEFAULT_CONTROLLER_URI = "tcp://127.0.0.1:9090";
-    protected static final String FILE_TAG = "upload@";
+    private static final String DEFAULT_SCOPE = "chattingRoom";
+    private static final String DEFAULT_CONTROLLER_URI = "tcp://127.0.0.1:9090";
+    private static final String FILE_TAG = "upload@";
 
-    protected final EventStreamWriter<byte[]> chatWriter;
-    protected final EventStreamReader<byte[]> chatReader;
-    protected final ReaderGroupManager chatReaderGroupManager;
-    protected final String SELF_NAME;
-    protected final int SELF_NAME_HASH;
-    protected final String CHAT_STREAM_NAME;
-    protected final String FILE_STREAM_NAME;
+    private final EventStreamWriter<byte[]> chatWriter;
+    private final EventStreamReader<byte[]> chatReader;
+    private final ReaderGroupManager chatReaderGroupManager;
+    private final String SELF_NAME;
+    private final int SELF_NAME_HASH;
+    private final String CHAT_STREAM_NAME;
+    private final String FILE_STREAM_NAME;
 
-    protected boolean sent_file_recently = false;
+    private boolean sent_file_recently = false;
 
 
 
     // this function is used to read and print msg or receive a file from a specific stream reader
-    public void receiveData() {
+    protected void receiveData() {
         while (true) {
             EventRead<byte[]> event = chatReader.readNextEvent(200);
             if (event.getEvent() == null) { break; }
@@ -65,7 +65,7 @@ public class ChatRoomClient implements AutoCloseable {
     }
 
     // this function is used to write data or a file to a specific stream reader
-    public void sendData(String message) throws Exception {
+    protected void sendData(String message) throws Exception {
         if (message.startsWith(FILE_TAG)){
             chatWriter.writeEvent(message.getBytes());
             try {
@@ -95,7 +95,7 @@ public class ChatRoomClient implements AutoCloseable {
         chatReaderGroupManager.close();
     }
 
-    public ChatRoomClient(String selfName, int inboxHash) throws Exception {
+    protected ChatRoomClient(String selfName, int inboxHash) throws Exception {
         this.SELF_NAME = selfName;
         this.SELF_NAME_HASH = selfName.hashCode();
         this.CHAT_STREAM_NAME = inboxHash + "";

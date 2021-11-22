@@ -17,7 +17,7 @@ import java.util.concurrent.CompletableFuture;
 public class WriterFactory {
 
     // the writer factory
-    public static EventStreamWriter<byte[]> getWriter(String url, String scope, String stream) throws Exception {
+    protected static EventStreamWriter<byte[]> getWriter(String url, String scope, String stream) throws Exception {
         URI uri = new URI(url);
         ClientConfig build = ClientConfig.builder().controllerURI(uri).build();
         EventStreamClientFactory streamClientFactory = EventStreamClientFactory.withScope(scope, build);
@@ -26,7 +26,7 @@ public class WriterFactory {
     }
 
     // the stream creator
-    public static void createStream(String url, String scope, String stream) throws Exception{
+    protected static void createStream(String url, String scope, String stream) throws Exception{
         URI uri = new URI(url);
         StreamManager streamManager = StreamManager.create(uri);
         streamManager.createScope(scope);

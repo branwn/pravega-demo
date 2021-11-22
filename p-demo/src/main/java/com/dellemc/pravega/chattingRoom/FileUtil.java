@@ -29,13 +29,13 @@ public class FileUtil {
     }
 
 
-    public static void sendFile(EventStreamWriter<byte[]> writer, String fileName) throws IOException {
+    protected static void sendFile(EventStreamWriter<byte[]> writer, String fileName) throws IOException {
         File path = new File(fileName);
         byte[] bytes = fileToBytes(path);
         writer.writeEvent(bytes);
     }
 
-    public static void readFile(String fileName, byte[] bytes) {
+    protected static void readFile(String fileName, byte[] bytes) {
         try{
             File dest = new File(FILES_RECEIVED_FOLDER + "/" + fileName);
             if (!dest.exists()) {

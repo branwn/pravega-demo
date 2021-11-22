@@ -11,10 +11,10 @@ import java.util.Scanner;
 
 
 public class UserInterface {
-    static final String LINE = "=========================";
-    static final String SPACE = "            ";
-    static final int refreshLatency = 1000;
-    static final String FILE_TAG = "upload@";
+    private static final String LINE = "=========================";
+    private static final String SPACE = "            ";
+    private static final int refreshLatency = 1000;
+    private static final String FILE_TAG = "upload@";
 
     // this function is used to generate a chatting room and save the username
     private static void initializor() throws Exception {
@@ -105,7 +105,7 @@ class ReadingThread extends Thread {
         }
     }
 
-    public void start () {
+    public void start() {
         if (t == null) {
             t = new Thread (this);
             t.start ();

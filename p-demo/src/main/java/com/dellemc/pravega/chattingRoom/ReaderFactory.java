@@ -16,7 +16,7 @@ import java.net.URI;
 
 public class ReaderFactory {
     // this is a reader group factory
-    public static ReaderGroupManager createReaderGroup(String url, String scope, String stream, String groupName) throws Exception {
+    protected static ReaderGroupManager createReaderGroup(String url, String scope, String stream, String groupName) throws Exception {
         URI uri = new URI(url);
         ReaderGroupManager readerGroupManager = ReaderGroupManager.withScope(scope, uri);
         ReaderGroupConfig readerGroupConfig = ReaderGroupConfig.builder().stream(scope + "/" + stream).build();
@@ -25,7 +25,7 @@ public class ReaderFactory {
     }
 
     // this is a stream reader factory
-    public static EventStreamReader<byte[]> createReader(String url, String scope, String readerId, String groupName) throws Exception {
+    protected static EventStreamReader<byte[]> createReader(String url, String scope, String readerId, String groupName) throws Exception {
         URI uri = new URI(url);
         ClientConfig build = ClientConfig.builder().controllerURI(uri).build();
         EventStreamClientFactory streamClientFactory = EventStreamClientFactory.withScope(scope, build);
