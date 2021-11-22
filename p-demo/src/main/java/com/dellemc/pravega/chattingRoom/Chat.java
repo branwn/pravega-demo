@@ -20,7 +20,6 @@ public class Chat implements AutoCloseable {
     protected static final String DEFAULT_SCOPE = "chattingRoom";
     protected static final String DEFAULT_CONTROLLER_URI = "tcp://127.0.0.1:9090";
     protected static final String FILE_TAG = "upload@";
-    protected static final byte[] FILE_TAG_BYTE = "upload@".getBytes();
     protected static final String FILES_RECEIVED_FOLDER = "./files_received/";
 
     protected EventStreamWriter<byte[]> chatWriter;
@@ -31,7 +30,7 @@ public class Chat implements AutoCloseable {
     protected final String CHAT_STREAM_NAME;
     protected final String FILE_STREAM_NAME;
 
-
+    protected boolean sent_file_recently = false;
 
     public static byte[] file_to_bytes(File file)  throws IOException {
         FileInputStream fl = new FileInputStream(file);
@@ -54,14 +53,12 @@ public class Chat implements AutoCloseable {
     }
 
 
-    public void sendFile() {
-        try{
-            File path = new File("./from.txt");
+    public void sendFile(String fileName) throws IOException {
+
+            File path = new File(fileName);
             byte[] bytes = file_to_bytes(path);
             chatWriter.writeEvent(bytes);
-        }catch (Exception e) {
-            System.out.println("[Debug] Fail to send the file.");
-        }
+
 
     }
 
@@ -80,19 +77,28 @@ public class Chat implements AutoCloseable {
     // this function is used to read and print data from a specific stream reader
     public void receiveData() {
         while (true) {
-            EventRead<byte[]> event = chatReader.readNextEvent(500);
+            EventRead<byte[]> event = chatReader.readNextEvent(200);
             if (event.getEvent() == null) { break; }
-            System.out.println("[Debug] String received: " + new String(event.getEvent()));
-            if (!Arrays.equals(event.getEvent(), FILE_TAG_BYTE)) {
+
+            String dataReceived = new String(event.getEvent());
+            if (!dataReceived.startsWith(FILE_TAG)) {
+                // print msg
                 System.out.println(new String(event.getEvent()));
-            } else {
-                EventRead<byte[]> nameEvent = chatReader.readNextEvent(500);
-                String fileName = new String(nameEvent.getEvent());
-                System.out.println("Receiving " + fileName + "...");
-                EventRead<byte[]> fileEvent = chatReader.readNextEvent(500);
-                byte[] bytes = fileEvent.getEvent();
-                readFile(fileName, bytes);
+                continue;
             }
+            if (sent_file_recently) {
+                sent_file_recently = false;
+                EventRead<byte[]> fileEvent = chatReader.readNextEvent(500);
+                continue;
+            }
+            // receive a file
+            String[] directoryName = dataReceived.split("/");
+            String fileName = directoryName[directoryName.length - 1];
+            System.out.println("Receiving file: " + fileName + "...");
+            EventRead<byte[]> fileEvent = chatReader.readNextEvent(500);
+            byte[] bytes = fileEvent.getEvent();
+            readFile(fileName, bytes);
+
 
         }
     }
@@ -100,18 +106,25 @@ public class Chat implements AutoCloseable {
     // this function is used to write data to a specific stream reader
     public void sendData(String message) throws Exception {
         if (message.startsWith(FILE_TAG)){
-            chatWriter.writeEvent(FILE_TAG_BYTE);
-            String[] directoryName = message.split("/");
-            System.out.println(Arrays.toString(directoryName));
-            String fileName = directoryName[directoryName.length - 1];
-            chatWriter.writeEvent(fileName.getBytes());
-            sendFile();
+            chatWriter.writeEvent(message.getBytes());
+//            System.out.println(message.substring(FILE_TAG.length()));
+            try {
+                sendFile(message.substring(FILE_TAG.length()));
+            } catch (Exception e) {
+                System.out.println("[Debug] Fail to send the file.");
+                return;
+            }
+            sent_file_recently = true;
             chatWriter.flush();
-        } else if (!message.equals("")) {
+            System.out.println("Upload Finished!");
+            return;
+        }
+        if (!message.equals("")) {
             chatWriter.writeEvent((SELF_NAME + ": " + message).getBytes());
             chatWriter.flush();
 //            CompletableFuture<Void> future = chatWriter.writeEvent((SELF_NAME + ": " + message).getBytes());
 //            future.get();
+            return;
         }
     }
 
