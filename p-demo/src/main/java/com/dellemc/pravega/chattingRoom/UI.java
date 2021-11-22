@@ -33,12 +33,12 @@ public class UI {
             if (choice.equals("1")) {
                 System.out.print("Please enter peer name: ");
                 String input = s.nextLine();
-                inboxHashCode = selfName.hashCode() + input.hashCode();
+                inboxHashCode = selfName.hashCode() * input.hashCode();
                 break;
             } else if (choice.equals("2")) {
                 System.out.print("Please enter the group name: ");
                 String input = s.nextLine();
-                inboxHashCode = input.hashCode();
+                inboxHashCode = input.hashCode() * input.hashCode();
                 break;
             }
         }
@@ -49,7 +49,7 @@ public class UI {
     private static void chattingMainLoop(String selfName, int inboxHashCode) throws Exception {
         System.out.println("Room " + inboxHashCode + " (Hash Code) has been successfully created.");
         System.out.println(LINE);
-        try (Chat myChat = new Chat(selfName, inboxHashCode + "")) {
+        try (Chat myChat = new Chat(selfName, inboxHashCode)) {
             System.out.println("Let's start chatting!");
             ReadingThread readMsg = new ReadingThread(myChat, refreshLatency);
             readMsg.start();
