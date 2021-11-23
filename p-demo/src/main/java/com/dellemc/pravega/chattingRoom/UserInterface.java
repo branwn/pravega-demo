@@ -13,8 +13,7 @@ import java.util.Scanner;
 public class UserInterface {
     private static final String LINE = "=========================";
     private static final String SPACE = "            ";
-    private static final int refreshLatency = 1000;
-    private static final String FILE_TAG = "upload@";
+    private static final int REFRESH_LATENCY = 400;
 
     // this function is used to generate a chatting room and save the username
     private static void initializor() throws Exception {
@@ -51,14 +50,14 @@ public class UserInterface {
     private static void chattingMainLoop(String selfName, int chatInboxHashCode) throws Exception {
         System.out.println("ChatRoom " + chatInboxHashCode + " (Hash Code) has been successfully created.");
         System.out.println(LINE);
-        try (ChatRoomClient myChatRoomClient = new ChatRoomClient(selfName, chatInboxHashCode)) {
+        try (ChatRoom myChatRoom = new ChatRoom(selfName, chatInboxHashCode)) {
             // [Debug]
             System.out.println("Let's start chatting!");
-            ReadingThread readMsg = new ReadingThread(myChatRoomClient, refreshLatency);
+            ReadingThread readMsg = new ReadingThread(myChatRoom, REFRESH_LATENCY);
             readMsg.start();
             Scanner s = new Scanner(System.in);
             for (String input = ""; !(input.equals("exit")); input = s.nextLine()) {
-                myChatRoomClient.sendData(input);
+                myChatRoom.sendData(input);
             }
             readMsg.interrupt();
         }
@@ -78,22 +77,22 @@ public class UserInterface {
 
 class ReadingThread extends Thread {
     private Thread t;
-    private ChatRoomClient myChatRoomClient;
+    private ChatRoom myChatRoom;
     private int refreshLatency = 1000;
 
-    ReadingThread(ChatRoomClient myChatRoomClient) {
-        this.myChatRoomClient = myChatRoomClient;
+    ReadingThread(ChatRoom myChatRoom) {
+        this.myChatRoom = myChatRoom;
     }
 
-    ReadingThread(ChatRoomClient myChatRoomClient, int refreshLatency) {
-        this.myChatRoomClient = myChatRoomClient;
+    ReadingThread(ChatRoom myChatRoom, int refreshLatency) {
+        this.myChatRoom = myChatRoom;
         this.refreshLatency = refreshLatency;
     }
 
     public void run() {
         try {
             while (! isInterrupted()){
-                myChatRoomClient.receiveData();
+                myChatRoom.receiveData();
                 Thread.sleep(this.refreshLatency);
             }
         } catch (InterruptedException e) {
