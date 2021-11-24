@@ -19,7 +19,7 @@ In the p-demo direcotry, I have realized a Console-based Chatting Room with the 
 
 
 
-### UI Example:
+### Usage Example:
 
 **Bob view:**
 
