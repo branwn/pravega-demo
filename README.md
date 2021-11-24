@@ -11,11 +11,11 @@ In the p-demo direcotry, I have realized a Console-based Chatting Room with the 
 
 ### User Instruction:
 
-1. Starting with running 'Userlnterface.main()' which would launch a console UI;
-2. Entering the Self Name, with Peer Name or Group Name following the instruction in console;
-3. Typing any string with a enter click to send msg to peer / group;
-4. Using keyword "upload@<file derectory>" to send a file to peer / group members;
-5. Using keyword "exit" to exit the chatting room;
+1. Starting with running '**Userlnterface.main()**' which would launch a console UI;
+2. Entering the Self Name, with Peer Name or Group Name following the instructions in console;
+3. Typing any string with a enter to send msg to peer / group;
+4. Using keyword "**upload@<file derectory>**" to send a file to peer / group members;
+5. Using keyword "**exit**" to exit the chatting room;
 
 
 
