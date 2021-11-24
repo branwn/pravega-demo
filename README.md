@@ -25,11 +25,11 @@ In the p-demo direcotry, I have realized a Console-based Chatting Room with the 
 
 ```=========================
             Welcome to the chat room!
-Please enter you name: Bob
+Please enter your name: Bob
 1: one to one chatting.
 2: group chat.
 1
-Please enter peer name: Alice
+Please enter your peer name: Alice
 ChatRoom -1170295328 (Hash Code) has been successfully created.
 =========================
 Let's start chatting!
@@ -48,11 +48,11 @@ exit
 
 ```=========================
             Welcome to the chat room!
-Please enter you name: Alice
+Please enter your name: Alice
 1: one to one chatting.
 2: group chat.
 1
-Please enter peer name: Bob
+Please enter your peer name: Bob
 ChatRoom -1170295328 (Hash Code) has been successfully created.
 =========================
 SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
